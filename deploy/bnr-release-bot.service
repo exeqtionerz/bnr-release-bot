@@ -1,0 +1,19 @@
+[Unit]
+Description=BNR Release Bot (Telegram)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=bnrbot
+WorkingDirectory=/opt/bnr-release-bot
+ExecStart=/usr/bin/node src/index.js
+Restart=always
+RestartSec=10
+# Archivos temporales grandes: limpia lo que tenga más de 3 días
+ExecStartPre=-/usr/bin/find /opt/bnr-release-bot/tmp -type f -mtime +3 -delete
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
