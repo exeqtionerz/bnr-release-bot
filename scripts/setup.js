@@ -18,13 +18,17 @@ function setEnv(k, v) {
   fs.writeFileSync(ENV, s, { mode: 0o600 });
 }
 
+// One shared readline for the whole run (closing/reopening it breaks on some web terminals).
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: true });
+let muted = false;
+rl._writeToOutput = (str) => { if (!muted || /[\r\n]/.test(str)) rl.output.write(muted ? str.replace(/[^\r\n]/g, '') : str); else rl.output.write('*'.repeat(str.length)); };
+rl.on('SIGINT', () => process.exit(130));
 function ask(q, hidden = false) {
   return new Promise((resolve) => {
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: true });
-    if (hidden) {
-      rl._writeToOutput = (str) => { if (str.includes(q)) rl.output.write(str); else rl.output.write('*'); };
-    }
-    rl.question(q, (a) => { rl.close(); if (hidden) process.stdout.write('\n'); resolve(a.trim()); });
+    muted = false;
+    rl.output.write(q);
+    muted = hidden;
+    rl.question('', (a) => { muted = false; resolve(a.replace(/[\x00-\x1f]/g, '').trim()); });
   });
 }
 
@@ -61,4 +65,5 @@ if (key && secret && (!current('DROPBOX_REFRESH_TOKEN') || (await ask('¿Volver 
 }
 
 fs.chmodSync(ENV, 0o600);
+rl.close();
 console.log('\nListo. Ahora ejecuta:  bash deploy/install.sh   (arranca el bot)\nDespués abre tu bot en Telegram y escribe /start\n');
