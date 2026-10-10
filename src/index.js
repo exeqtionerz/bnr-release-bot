@@ -40,5 +40,5 @@ setInterval(watch, config.dropbox.watchMin * 60_000);
 keepTokensAlive();
 setInterval(keepTokensAlive, 7 * 24 * 3600_000);
 
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+// Stop cleanly (timers would otherwise keep the process alive and delay restarts).
+for (const sig of ['SIGINT', 'SIGTERM']) process.once(sig, () => { try { bot.stop(sig); } catch {} setTimeout(() => process.exit(0), 500); });
