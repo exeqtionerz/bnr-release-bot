@@ -16,7 +16,7 @@ if [ ! -d "$APP_DIR/.git" ]; then
 fi
 cd "$APP_DIR"
 npm ci --omit=dev
-[ -f .env ] || { cp .env.example .env; echo ">> Rellena $APP_DIR/.env y vuelve a ejecutar este script."; exit 0; }
+if [ ! -f .env ] || ! grep -q "^TELEGRAM_BOT_TOKEN=." .env; then echo ">> Primero ejecuta:  npm run setup   y luego otra vez este script."; exit 0; fi
 
 id -u bnrbot >/dev/null 2>&1 || useradd --system --home "$APP_DIR" --shell /usr/sbin/nologin bnrbot
 mkdir -p data tmp && chown -R bnrbot:bnrbot data tmp
