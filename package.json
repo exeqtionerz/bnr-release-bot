@@ -1,0 +1,20 @@
+{
+  "name": "bnr-release-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot that takes Break Neck Records releases from Dropbox and publishes them to YouTube, Instagram, TikTok and SoundCloud",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test test/*.test.js",
+    "auth:dropbox": "node scripts/auth.js dropbox",
+    "auth:youtube": "node scripts/auth.js youtube",
+    "auth:soundcloud": "node scripts/auth.js soundcloud",
+    "auth:tiktok": "node scripts/auth.js tiktok",
+    "check": "node scripts/check.js"
+  },
+  "dependencies": {
+    "telegraf": "4.16.3"
+  }
+}

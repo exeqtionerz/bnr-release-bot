@@ -1,0 +1,9 @@
+services:
+  bnr-bot:
+    build: .
+    container_name: bnr-release-bot
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./tmp:/app/tmp
