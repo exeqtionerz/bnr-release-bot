@@ -116,7 +116,8 @@ export async function listReleases() {
   return out.sort((a, b) => sortKey(b.name) - sortKey(a.name) || a.name.localeCompare(b.name));
 }
 
-function sortKey(name) { const m = name.match(/\d{2,4}/); return m ? Number(m[0]) : 0; }
+// Newest catalog number first ("BNR 072" > "BNR 071"); folders without a catalog number go last.
+function sortKey(name) { const m = name.match(/^\s*[A-Z]{2,5}\s*[-_ ]?\s*0*(\d{1,4})/i); return m ? Number(m[1]) : -1; }
 
 // Returns release folders not seen before. The first run only records what exists (no spam).
 export async function detectNew() {
