@@ -8,6 +8,7 @@
   "scripts": {
     "start": "node src/index.js",
     "setup": "node scripts/setup.js",
+    "connect": "node scripts/connect.js",
     "test": "node --test test/*.test.js",
     "auth:dropbox": "node scripts/auth.js dropbox",
     "auth:youtube": "node scripts/auth.js youtube",
